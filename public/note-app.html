@@ -21,6 +21,23 @@
         signed-in="{{signedIn}}"
         user="{{user}}">
     </firebase-auth>
+    <paper-fab
+        icon="add"
+        on-tap="create"
+        disabled="[[!online]]"
+        aria-label="Add note">
+    </paper-fab>
+    <na-editor
+        id="editor"
+        note="{{editableNote}}"
+        on-close="commitChange">
+    </na-editor>
+    <firebase-document
+        id="document"
+        app-name="notes"
+        path="[[editableNoteId]]"
+        data="{{editableNote}}">
+    </firebase-document>
   </template>
   <script>
       Polymer({
@@ -30,6 +47,14 @@
 
         signIn: function() {
           this.$.auth.signInWithPopup();
+        },
+
+        get notesPath() {
+          return '/notes/' + this.user.uid;
+        },
+
+        toEditableId: function(noteId) {
+          return this.notesPath + '/' + noteId;
         }
       });
   </script>
